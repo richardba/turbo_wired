@@ -362,30 +362,22 @@ function getCspNonce() {
 }
 
 function setMetaContent(name, content) {
-  let content_invalid = typeof content !== "string";
-  let name_invalid = typeof name !== "string";
-
-  if (content_invalid && name_invalid) {
-    throw new TypeError("Both name and content must be strings");
-  } else if (name_invalid) {
-    throw new TypeError("Name must be a string");
-  } else if (content_invalid) {
-    throw new TypeError("Content must be a string");
+  if (name_invalid || content_invalid) {
+    throw new TypeError("Both name and content must be valid strings");
   }
 
   let element = getMetaElement(name);
-  if (element) {
-    // Update only if the content is different
-    if (element.getAttribute("content") !== content) {
-      element.setAttribute("content", content);
+  if(element) {
+    if (element.getAttribute("content") === content) {
+      return element;
     }
-  } else {
-    // Create and append the meta element
-    element = document.createElement("meta");
-    element.setAttribute("name", name);
-    element.setAttribute("content", content);
-    document.head.appendChild(element);
   }
+  // Create and append the meta element
+  element = document.createElement("meta");
+  element.setAttribute("name", name);
+  element.setAttribute("content", content);
+  document.head.appendChild(element);
+
   return element;
 }
 
